@@ -36,3 +36,7 @@ out/
 
 ### VS Code ###
 .vscode/
+src/main/resources/application-coolsms.properties
+src/main/resources/application-jwt.properties
+src/main/resources/application-mysql.properties
+src/main/resources/application-redis.properties
