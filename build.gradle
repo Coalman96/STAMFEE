@@ -47,7 +47,7 @@ dependencies {
 	//CoolSMS
 	implementation 'net.nurigo:sdk:4.3.0'
 
-	//mapstruct 의존성  
+	//mapstruct 의존성
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
