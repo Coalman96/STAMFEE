@@ -13,12 +13,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MemberDTO {
 
+  //휴대폰번호
   private String cellphone;
+  //비밀번호
   private String password;
+  //닉네임
   private String nickname;
+  //동네
   private String dongNe;
+  //프로필사진
   private String picture;
+  //활성화여부
   private boolean isActivate;
+  //역할
   private Role role;
 
 }
