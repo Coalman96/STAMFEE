@@ -22,8 +22,15 @@ public class AuthRestController {
   private final AuthService authService;
   @PostMapping("/sendSms")
   public ResponseEntity<?> sendSms(@RequestBody AuthDTO authDTO) throws Exception{
-    log.info("/member/sendOne : POST : {}", authDTO);
+    log.info("/sms/sendSms : POST : {}", authDTO);
     return authService.sendSms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+        new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+  }
+
+  @PostMapping("/findAccount")
+  public ResponseEntity<?> findAccount(@RequestBody AuthDTO authDTO) throws Exception{
+    log.info("/sms/findAccount : POST : {}", authDTO);
+    return authService.findAccount(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
         new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
   }
 
