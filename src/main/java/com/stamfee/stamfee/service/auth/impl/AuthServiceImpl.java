@@ -3,6 +3,7 @@ package com.stamfee.stamfee.service.auth.impl;
 import com.stamfee.stamfee.dto.AuthDTO;
 import com.stamfee.stamfee.service.auth.AuthRepository;
 import com.stamfee.stamfee.service.auth.AuthService;
+import com.stamfee.stamfee.service.member.MemberRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
   private String messageTest;
 
   private final AuthRepository smsCertification;
+
+  private final MemberRepository memberRepository;
   private DefaultMessageService messageService;
 
   private final AuthRepository smsCertificationRepository;
@@ -50,12 +53,45 @@ public class AuthServiceImpl implements AuthService {
     message.setText(messageTest +" "+ authDTO.getAuthNumber());
 
     try {
-      SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+      if(memberRepository.findByCellphone(authDTO.getTo()).isEmpty()){
 
-      // DB에 발송한 인증번호 저장
-      smsCertification.addAuthNum(authDTO);
+        this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-      return true;
+        // DB에 발송한 인증번호 저장
+        smsCertification.addAuthNum(authDTO);
+        return true;
+      }else{
+        System.out.println("이미 존재하는 회원입니다.");
+        return false;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public boolean findAccount(AuthDTO authDTO) {
+    Message message = new Message();
+    authDTO.setAuthNumber(generateRandomCode(5));
+    // 발신번호 및 수신번호는 반드시 01012345678 형태.
+    message.setFrom(senderNumber);
+    message.setTo(authDTO.getTo());
+    message.setText(messageTest +" "+ authDTO.getAuthNumber());
+
+    try {
+      if(memberRepository.findByCellphone(authDTO.getTo()).isPresent()){
+
+        this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+        // DB에 발송한 인증번호 저장
+        smsCertification.addAuthNum(authDTO);
+
+        return true;
+      }else{
+        System.out.println("없는 회원입니다.");
+        return false;
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return false;

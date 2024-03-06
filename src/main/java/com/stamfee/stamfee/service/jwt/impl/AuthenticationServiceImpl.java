@@ -55,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       member.setRole(Role.USER);
       member.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
       memberRepository.save(member);
-      MemberDTO existMember = memberRepository.findByCellphone(memberDTO.getCellphone()).map(memberMapper::memberToMemberDTO).orElseThrow(()-> new IllegalArgumentException("없는 태그입니다."));
+      MemberDTO existMember = memberRepository.findByCellphone(memberDTO.getCellphone()).map(memberMapper::memberToMemberDTO).orElseThrow(()-> new IllegalArgumentException("없는 회원입니다."));
       return accessToken(existMember);
     }
   }
@@ -80,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // CustomAuthenticationToken을 사용하려면 CustomAuthenticationManager의 authenticate가 호출되도록 해야 합니다.
     // 따라서 여기에서는 CustomAuthenticationManager를 직접 호출하게 됩니다.
     authenticationManager.authenticate(authRequest);
-    Member member = memberRepository.findByCellphone(memberDTO.getCellphone()).orElseThrow(()-> new IllegalArgumentException("없는 태그입니다."));
+    Member member = memberRepository.findByCellphone(memberDTO.getCellphone()).orElseThrow(()-> new IllegalArgumentException("없는 회원입니다."));
     TokenDTO tokenDTO = new TokenDTO();
 
     tokenDTO.setAccessToken(jwtService.generateToken(member));
@@ -94,7 +94,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // 받은 RefreshToken을 통해 유저 정보 중 아이디값추출 -> subject
     String memberCellphone = jwtService.extractUserName(refreshTokenDTO.getRefreshToken());
     // 추출한 아이디로 데이터를가져옴
-    Member member = memberRepository.findByCellphone(memberCellphone).orElseThrow(()-> new IllegalArgumentException("없는 태그입니다."));
+    Member member = memberRepository.findByCellphone(memberCellphone).orElseThrow(()-> new IllegalArgumentException("없는 회원입니다."));
 
     //
     if(jwtService.isTokenValid(refreshTokenDTO.getRefreshToken(),member)){

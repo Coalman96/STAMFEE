@@ -8,6 +8,9 @@ public interface AuthService {
   public boolean sendSms(AuthDTO authDTO);
 //  public void sendOne(String cellphone);
 
+  public boolean findAccount(AuthDTO authDTO);
+
+
   public boolean verifySms(AuthDTO authDTO) throws Exception;
 
 
