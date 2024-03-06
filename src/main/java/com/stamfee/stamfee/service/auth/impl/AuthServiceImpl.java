@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
   // 단일 메시지 발송 예제
   @Override
-  public SingleMessageSentResponse sendSms(AuthDTO authDTO) {
+  public boolean sendSms(AuthDTO authDTO) {
     Message message = new Message();
     authDTO.setAuthNumber(generateRandomCode(5));
     // 발신번호 및 수신번호는 반드시 01012345678 형태.
@@ -49,12 +49,17 @@ public class AuthServiceImpl implements AuthService {
     message.setTo(authDTO.getTo());
     message.setText(messageTest +" "+ authDTO.getAuthNumber());
 
-    SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+    try {
+      SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-    // DB에 발송한 인증번호 저장
-    smsCertification.addAuthNum(authDTO);
+      // DB에 발송한 인증번호 저장
+      smsCertification.addAuthNum(authDTO);
 
-    return response;
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   private String generateRandomCode(int length) {
@@ -72,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     if (!(smsCertificationRepository.isAuthNum(authDTO.getTo()) &&
         smsCertificationRepository.getAuthNum(authDTO.getTo())
             .equals(authDTO.getAuthNumber()))) {
-      throw new Exception("인증번호가 일치하지 않습니다.");
+      return false;
     }
 
     smsCertificationRepository.deleteAuthNum(authDTO.getTo());

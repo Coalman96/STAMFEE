@@ -5,6 +5,8 @@ import com.stamfee.stamfee.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,19 +21,18 @@ public class AuthRestController {
   @Autowired
   private final AuthService authService;
   @PostMapping("/sendSms")
-  public String sendSms(@RequestBody AuthDTO authDTO) throws Exception{
+  public ResponseEntity<?> sendSms(@RequestBody AuthDTO authDTO) throws Exception{
     log.info("/member/sendOne : POST : {}", authDTO);
-    authService.sendSms(authDTO);
-
-    return "{\"success\": true}";
+    return authService.sendSms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+        new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
   }
 
   @PostMapping("/verifySms")
-  public String verifySms(@RequestBody AuthDTO authDTO) throws Exception{
+  public ResponseEntity<?> verifySms(@RequestBody AuthDTO authDTO) throws Exception{
     log.info("/member/verifySms : POST : {}", authDTO);
-    authService.verifySms(authDTO);
+   return authService.verifySms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+       new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
 
-    return "{\"success\": true}";
   }
 
 }

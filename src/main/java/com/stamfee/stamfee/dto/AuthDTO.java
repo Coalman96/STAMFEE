@@ -12,9 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class AuthDTO {
-  //1. 휴대폰번호,이메일 인증을위한 DTO
-
+  //사용자 휴대폰번호
   private String to;
+  //인증번호
   private String authNumber;
 
 }

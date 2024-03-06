@@ -34,16 +34,24 @@ public class AuthenticationRestController {
   private ObjectMapper objectMapper;
 
   @PostMapping("/addMember")
-  public ResponseEntity<TokenDTO> addMember(@RequestBody MemberDTO memberDTO) throws Exception {
+  public ResponseEntity<?> addMember(@RequestBody MemberDTO memberDTO) throws Exception {
     log.info("/member/login : POST");
     log.info("addMember에서 받은 memberDTO는 {}", memberDTO);
 
     TokenDTO tokenDTO = authenticationService.addMember(memberDTO);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", "Bearer " + tokenDTO.getAccessToken());
+    if(tokenDTO != null){
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Authorization", "Bearer " + tokenDTO.getAccessToken());
+      headers.add("RefreshToken", "Bearer " + tokenDTO.getRefreshToken());
+      return new ResponseEntity<>("{\"success\": true}", headers, HttpStatus.OK);
+    }else{
 
-    return new ResponseEntity<>(tokenDTO, headers, HttpStatus.OK);
+      return new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+    }
+
+
+
   }
 
   @PostMapping("/login")
@@ -55,21 +63,30 @@ public class AuthenticationRestController {
     if(tokenDTO.getAccessToken() != null){
       HttpHeaders headers = new HttpHeaders();
       headers.add("Authorization", "Bearer " + tokenDTO.getAccessToken());
-      return new ResponseEntity<>(tokenDTO, headers, HttpStatus.OK);
+      headers.add("RefreshToken", "Bearer " + tokenDTO.getRefreshToken());
+      return new ResponseEntity<>("{\"success\": true}", headers, HttpStatus.OK);
     }else{
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 틀렸습니다.");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 틀렸습니다.");
     }
 
   }
 
 
   @PostMapping("/refresh")
-  public TokenDTO refresh(@RequestBody TokenDTO refreshTokenDTO) throws Exception {
+  public ResponseEntity<?> refresh(@RequestBody TokenDTO tokenDTO) throws Exception {
 
     log.info("/api/v1/auth/json/refresh : POST");
-    log.info("refresh에서 받은 tokenDTO는 {}",refreshTokenDTO);
+    log.info("refresh에서 받은 tokenDTO는 {}",tokenDTO);
+    if(tokenDTO.getAccessToken() != null){
+      TokenDTO newToken = authenticationService.refreshToken(tokenDTO);
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Authorization", "Bearer " + newToken.getAccessToken());
+      headers.add("RefreshToken", "Bearer " + newToken.getRefreshToken());
+      return new ResponseEntity<>("{\"success\": true}", headers, HttpStatus.OK);}
+    else{
 
-    return authenticationService.refreshToken(refreshTokenDTO);
+      return new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+    }
   }
 
 }

@@ -43,11 +43,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public TokenDTO addMember(MemberDTO memberDTO) throws Exception {
     // findByCellphone로 회원을 찾음
     Optional<MemberDTO> existingMember = memberRepository.findByCellphone(memberDTO.getCellphone())
+        .or(()->memberRepository.findByNickname(memberDTO.getNickname()))
         .map(memberMapper::memberToMemberDTO);
     // 회원이 이미 존재하는 경우 예외를 던짐
 
     if (existingMember.isPresent()) {
-      throw new IllegalArgumentException("이미 존재하는 회원입니다. 회원의 정보: " + existingMember.get());
+//      throw new IllegalArgumentException("이미 존재하는 회원입니다. 회원의 정보: " + existingMember.get());
+      return null;
     }else{
       Member member = memberMapper.memberDTOToMember(memberDTO);
       member.setRole(Role.USER);

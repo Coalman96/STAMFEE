@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TokenDTO {
-  //1. Jwt 토큰
-
+  //액세스 토큰
   private String accessToken;
-
+  //리프레시 토큰
   private String refreshToken;
 
 }
