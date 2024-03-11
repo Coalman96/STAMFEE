@@ -19,6 +19,11 @@ public class CafeDto {
     private Double longitude;
     private Double latitude;
     private String dong;
+//
+//    public Cafe toEntity(CafeDto cafeDto){
+//        return Cafe.builder()
+//                .
+//    }
 
     public static CafeDto fromEntity(Cafe cafe){
         return CafeDto.builder()

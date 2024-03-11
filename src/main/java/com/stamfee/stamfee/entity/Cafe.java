@@ -1,8 +1,10 @@
 package com.stamfee.stamfee.entity;
 
+import com.stamfee.stamfee.dto.cafe.CafeDto;
 import com.stamfee.stamfee.dto.cafe.CafeUpdateDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -27,10 +29,27 @@ public class Cafe {
     private Double latitude;
 
     private String dong;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+
+    private Boolean stampFlag;
+    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+
+    // 생성자 메서드
+    @Builder
+    public Cafe(CafeDto cafeDto){
+        this.id = cafeDto.getId();
+        this.name = cafeDto.getName();
+        this.content = cafeDto.getContent();
+        this.telNumber = cafeDto.getTelNumber();
+        this.longitude = cafeDto.getLongitude();
+        this.latitude = cafeDto.getLatitude();
+        this.dong = cafeDto.getDong();
+
+    }
 
 
     /*
@@ -60,4 +79,5 @@ public class Cafe {
         this.latitude = cafeUpdateDto.getLatitude();
         this.dong = cafeUpdateDto.getDong();
     }
+
 }
