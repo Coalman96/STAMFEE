@@ -2,9 +2,11 @@ package com.stamfee.stamfee.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stamfee.stamfee.dto.AuthDTO;
 import com.stamfee.stamfee.dto.GpsDTO;
 import com.stamfee.stamfee.dto.MemberDTO;
 import com.stamfee.stamfee.dto.TokenDTO;
+import com.stamfee.stamfee.service.auth.AuthService;
 import com.stamfee.stamfee.service.jwt.AuthenticationService;
 import com.stamfee.stamfee.service.member.MemberService;
 import java.util.Map;
@@ -29,6 +31,9 @@ public class AuthenticationRestController {
   private final AuthenticationService authenticationService;
 
   private final MemberService memberService;
+
+  @Autowired
+  private final AuthService authService;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -87,6 +92,28 @@ public class AuthenticationRestController {
 
       return new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @PostMapping("/sendSms")
+  public ResponseEntity<?> sendSms(@RequestBody AuthDTO authDTO) throws Exception{
+    log.info("/sms/sendSms : POST : {}", authDTO);
+    return authService.sendSms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+        new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+  }
+
+  @PostMapping("/findAccount")
+  public ResponseEntity<?> findAccount(@RequestBody AuthDTO authDTO) throws Exception{
+    log.info("/sms/findAccount : POST : {}", authDTO);
+    return authService.findAccount(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+        new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+  }
+
+  @PostMapping("/verifySms")
+  public ResponseEntity<?> verifySms(@RequestBody AuthDTO authDTO) throws Exception{
+    log.info("/member/verifySms : POST : {}", authDTO);
+    return authService.verifySms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
+        new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+
   }
 
 }

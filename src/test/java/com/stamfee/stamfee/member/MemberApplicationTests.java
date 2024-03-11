@@ -5,6 +5,7 @@ import com.stamfee.stamfee.common.Role;
 import com.stamfee.stamfee.dto.AuthDTO;
 import com.stamfee.stamfee.dto.GpsDTO;
 import com.stamfee.stamfee.dto.MemberDTO;
+import com.stamfee.stamfee.dto.SearchDTO;
 import com.stamfee.stamfee.dto.TokenDTO;
 import com.stamfee.stamfee.entity.Member;
 import com.stamfee.stamfee.mapper.MemberMapper;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +40,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -66,6 +70,11 @@ public class MemberApplicationTests {
 
   @Mock
   PasswordEncoder passwordEncoder;
+
+  @BeforeEach
+  public void setUp() {
+    MockitoAnnotations.openMocks(this); // 필드 주입을 위한 설정
+  }
 
 
   @Value("${pageSize}")
@@ -209,198 +218,131 @@ public class MemberApplicationTests {
     Assertions.assertNull(result.getAccessToken());
 
   }
-//
-//  @DisplayName("동네설정 테스트")
-////  @Test
-//  public void testGetDongNe() throws Exception {
-//    String tag = "#4FzB";
-//
-//    // 실제 현재 위치 좌표는 Js의 geolocation 사용 예정
-//    double x = 127.0292881;
-//    double y = 37.4923615;
-//
-////    double x = 126.8110081;
-////    double y = 37.5599801;
-//
-//    GpsDTO gpsDTO = new GpsDTO();
-//    gpsDTO.setX(x);
-//    gpsDTO.setY(y);
-//
-//    memberService.addDongNe(tag, gpsDTO);
-//
-//  }
-//
-//  @DisplayName("내프로필조회 테스트")
-////  @Test
-//  public void testGetMember() throws Exception{
-//    String tag="#4FzB";
-//    MemberDTO memberDTO = memberService.getMember(tag);
-//    System.out.println(memberDTO);
-//  }
-//
-//  @DisplayName("상대프로필조회 테스트")
-////  @Test
-//  public void testGetOtherMember() throws Exception{
-//    String tag="#4FzB";
-//    MemberDTO memberDTO = memberService.getOtherMember(tag);
-//    System.out.println(memberDTO);
-//  }
-//
-//  @DisplayName("회원목록조회 테스트")
-////  @Test
-//  public void testGetMemberList() throws Exception{
-//    SearchDTO searchDTO = SearchDTO.builder()
-//        .currentPage(0)
-//        .searchKeyword("엄")
-//        .pageSize(pageSize)
-//        .build();
-//
-//    List<MemberDTO> memberDTOList = memberService.getMemberList(searchDTO);
-//    System.out.println(memberDTOList);
-//
-//  }
-//
-//  @DisplayName("정지회원 등록 테스트")
-////  @Test
-//  public void testAddBlockMember() throws Exception{
-//    String tag = "#4FzB";
-//    BlockDTO blockDTO = BlockDTO.builder()
-//        .id(1L)
-//        .blockReason("걍 띠꺼움")
-//        .blockEnd(LocalDateTime.now().plusDays(7))
-//        .blockDay(7L)
-//        .build();
-//
-//    memberService.addBlockMember(blockDTO, tag);
-//    System.out.println(memberService.getMember(tag));
-//  }
-//
-//  @DisplayName("정지회원 삭제 테스트")
-////  @Test
-//  public void testDeleteBlockMember() throws Exception{
-//    String tag = "#4FzB";
-//    memberService.deleteBlockMember(tag);
-//    System.out.println(memberService.getMember(tag));
-//  }
-//
-//  @DisplayName("회원 비활성화, 비활성화 해제 테스트")
-////  @Test
-//  public void testHandleMemberActivate() throws Exception{
-//   String tag = "#4FzB";
-//   memberService.handleMemberActivate(tag);
-//
-// }
-//
-//  @DisplayName("회원 비활성화, 비활성화 해제 테스트")
-////  @Test
-//  public void testHandleNadeuliDelivery() throws Exception{
-//    String tag = "#4FzB";
-//    memberService.handleNadeuliDelivery(tag);
-//
-//  }
-//
-//
-//  @DisplayName("회원 수정 테스트")
-////  @Test
-//  public void testUpdateMemeber() throws Exception{
-//    MemberDTO memberDTO = MemberDTO.builder()
-//        .tag("#4FzB")
-//        .picture("1234.jpg")
-//        .nickname("롤로노아 김동헌")
-//        .cellphone("01088888888")
-//        .email("sex@gmail.com")
-//        .build();
-//
-//    memberService.updateMember(memberDTO);
-//  }
-//
-//  @DisplayName("즐겨찾기 추가 테스트")
-////  @Test
-//  public void testaddFavorite() throws Exception{
-//    String tag = "#4FzB";
-//    Long productId = 6L;
-//
-//    memberService.addFavorite(tag, productId);
-//  }
-//
-//  @DisplayName("즐겨찾기 삭제 테스트")
-////  @Test
-//  public void testDeleteFavorite() throws Exception{
-//    String tag = "#4FzB";
-//    Long productId = 5L;
-//
-//    memberService.deleteFavorite(tag, productId);
-//  }
-//
-//  @DisplayName("즐겨찾기 목록 조회 테스트")
-////  @Test
-//  public void testGetFavoriteList() throws Exception{
-//    SearchDTO searchDTO = new SearchDTO();
-//    searchDTO.setCurrentPage(0);
-//    searchDTO.setPageSize(pageSize);
-//    searchDTO.setSearchKeyword("");
-//    List<OriScheMemChatFavDTO> oriScheMemChatFavDTOList = memberService.getFavoriteList("#4FzB", searchDTO);
-//    System.out.println(oriScheMemChatFavDTOList);
-//
-//  }
-//
-//  @DisplayName("친화력 툴팁 테스트")
-////  @Test
-//  public void testGetAffinityToolTip() throws Exception {
-//    System.out.println(memberService.getAffinityToolTip());
-//
-//  }
-//
-//  @DisplayName("신고 테스트")
-////  @Test
-//  public void testReport() throws Exception{
-//    MemberDTO memberDTO = memberService.getMember("#4FzB");
-//    ProductDTO productDTO = productService.getProduct(5L);
-//    ReportDTO reportDTO = ReportDTO.builder()
-//        .reportId(1L)
-//        .content("걍 개띠꺼움ddd     ")
-//        .reporter(memberDTO)
-//        .product(productDTO)
-//        .build();
-//
-//    memberService.addReport(reportDTO);
-//
-//  }
-//
-//  @DisplayName("나드리페이 계산 테스트")
-////  @Test
-//  public void testHandleNadeuliPayBalance() throws Exception{
-//    NadeuliPayHistoryDTO nadeuliPayHistoryDTO = NadeuliPayHistoryDTO.builder()
-//        .nadeuliPayHistoryId(1L)
-//        .tradingMoney(10000L)
-////        .tradingMoney(4000L)
-////        .tradeType(TradeType.CHARGE)
-////        .tradeType(TradeType.PAYMENT)
-//        .tradeType(TradeType.WITHDRAW)
-//        .build();
-//
-//    NadeuliDeliveryDTO nadeuliDeliveryDTO = NadeuliDeliveryDTO.builder()
-//        .nadeuliDeliveryId(1L)
-//        .deposit(10001L)
-//        .deliveryState(DeliveryState.CANCEL_DELIVERY)
-//        .deliveryState(DeliveryState.DELIVERY_ORDER)
-//        .build();
-//    String tag = "#1qZL";
-//
-////    memberService.handleNadeuliPayBalance(tag,null,nadeuliDeliveryDTO);
-//    memberService.handleNadeuliPayBalance(tag,nadeuliPayHistoryDTO,null,null);
-//
-//  }
-//
-//  @DisplayName("친화력 점수 반영 테스트")
-////  @Test
-//  public void testUpdateAffinity() throws Exception{
-//    String tag = "Kv4G";
-//    Long affinityScore = 5L;
-//    Long affinityScore1 = -5L;
-//
-//    memberService.updateAffinity(tag);
-//
-//  }
+
+  @DisplayName("내프로필조회 테스트")
+//  @Test
+  public void testGetMember() throws Exception{
+    //given
+    String cellPhone = "01034431643";
+
+    //회원객체 생성
+    Member existMember = Member.builder()
+        .cellphone(cellPhone)
+        .build();
+
+    MemberDTO expectedMemberDTO = MemberDTO.builder()
+        .cellphone(cellPhone)
+        .build();
+
+    BDDMockito.given(memberRepository.findByCellphone(cellPhone)).willReturn(Optional.of(existMember));
+    BDDMockito.given(memberMapper.memberToMemberDTO(existMember)).willReturn(expectedMemberDTO);
+
+    //when
+    MemberDTO memberDTO = memberService.getMember(cellPhone);
+    System.out.println(memberDTO);
+
+    //then
+    Assertions.assertNotNull(memberDTO);
+    Assertions.assertEquals(memberDTO.getNickname(),expectedMemberDTO.getNickname());
+  }
+
+  @DisplayName("상대프로필조회 테스트")
+//  @Test
+  public void testGetOtherMember() throws Exception{
+    //given
+    String nickname="NotPussyUm";
+
+    //회원객체 생성
+    Member existMember = Member.builder()
+        .nickname(nickname)
+        .build();
+
+    MemberDTO expectedMemberDTO = MemberDTO.builder()
+        .nickname(nickname)
+        .build();
+
+    BDDMockito.given(memberRepository.findByNickname(nickname)).willReturn(Optional.of(existMember));
+    BDDMockito.given(memberMapper.memberToMemberDTO(existMember)).willReturn(expectedMemberDTO);
+
+    //when
+    MemberDTO memberDTO = memberService.getOtherMember(nickname);
+    System.out.println(memberDTO);
+
+    //then
+    Assertions.assertNotNull(memberDTO);
+    Assertions.assertEquals(memberDTO.getNickname(),expectedMemberDTO.getNickname());
+  }
+
+  @DisplayName("회원목록조회 테스트")
+//  @Test
+  public void testGetMemberList() throws Exception{
+    //given
+    SearchDTO searchDTO = SearchDTO.builder()
+        .currentPage(0)
+        .searchKeyword("")
+        .pageSize(pageSize)
+        .build();
+
+    Pageable pageable = PageRequest.of(searchDTO.getCurrentPage(), searchDTO.getPageSize());
+
+    BDDMockito.given(memberRepository.findAll(pageable));
+
+    //when
+    List<MemberDTO> memberDTOList = memberService.getMemberList(searchDTO);
+    System.out.println(memberDTOList);
+
+    //then
+    Assertions.assertNotNull(memberDTOList);
+
+  }
+  @DisplayName("회원 닉네임 수정 테스트")
+//  @Test
+  public void testUpdateNickname() throws Exception{
+    //given
+    String updateNickname = "PussyUm";
+    String cellphone = "01034431643";
+
+    //회원객체 생성
+    Member existMember = Member.builder()
+        .cellphone(cellphone)
+        .nickname("NotPussyUm")
+        .build();
+
+    MemberDTO existMemberDTO = MemberDTO.builder()
+        .cellphone(cellphone)
+        .nickname("NotPussyUm")
+        .build();
+
+    MemberDTO updateMember = MemberDTO.builder()
+        .cellphone(cellphone)
+        .nickname(updateNickname)
+        .build();
+
+    BDDMockito.given(memberRepository.findByNickname(updateMember.getNickname())).willReturn(null);
+    BDDMockito.given(memberMapper.memberToMemberDTO(existMember)).willReturn(existMemberDTO);
+
+    //when
+    boolean result = memberService.updateNickname(updateMember);
+
+    //then
+    Assertions.assertTrue(result);
+  }
+
+  @DisplayName("회원 닉네임 중복 체크 테스트")
+//  @Test
+  public void testCheckNickname() throws Exception{
+    //given
+    String updateNickname = "PussyUm123";
+
+    BDDMockito.given(memberRepository.findByNickname(updateNickname)).willReturn(null);
+
+    //when
+    boolean result = memberService.checkNickname(updateNickname);
+
+    //then
+    Assertions.assertFalse(result);
+  }
+
+
 }
 
