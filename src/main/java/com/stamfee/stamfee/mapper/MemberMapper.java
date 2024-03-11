@@ -11,8 +11,11 @@ public interface MemberMapper {
 
 
   @Mapping(target = "authorities", ignore = true)
+  @Mapping(target = "posts", ignore = true)
+  @Mapping(target = "comments", ignore = true)
   Member memberDTOToMember(MemberDTO memberDTO);
 
+  @Mapping(target = "activate", ignore = true)
   MemberDTO memberToMemberDTO(Member member);
 
 }

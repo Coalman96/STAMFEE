@@ -195,11 +195,11 @@ public class SecurityConfig {
         //8. HTTP 요청에 대한 접근 권한을 설정
         .authorizeHttpRequests((request) -> request
             //8-1. .permitAll()에 해당하는 URI는 인증되지않은 회원도 접근 가능
-            .requestMatchers("/stamfee/**", "/sms/**", "/test/**").permitAll()
+            .requestMatchers("/stamfee/**", "/test/**").permitAll()
             //8-2. ADMIN만 접근가능
             .requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
             //8-3. USER만 접근가능
-            .requestMatchers("/member/**").hasAnyAuthority(Role.USER.name())
+            .requestMatchers("/stamfee/member/**", "/stamfee/community/**").hasAnyAuthority(Role.USER.name())
             //8-4. 모든 요청에 대해 인증이 필요함
             .anyRequest().authenticated())
         //세션관리 비활성화,상태를 저장하지 않는 세션을 사용하며
