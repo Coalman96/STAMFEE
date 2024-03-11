@@ -55,8 +55,8 @@ public class Cafe {
     /*
     * 카페 생성 로직
     * */
-    public static Cafe createClub(String name, String content, String telNumber,
-                                  Double longitude, Double latitude, String dong){
+    public static Cafe createCafe(String name, String content, String telNumber,
+                                  Double longitude, Double latitude, String dong, Member member){
         Cafe cafe = new Cafe();
         cafe.name = name;
         cafe.content = content;
@@ -64,6 +64,7 @@ public class Cafe {
         cafe.longitude = longitude;
         cafe.latitude = latitude;
         cafe.dong = dong;
+        cafe.member = member;
 
         return cafe;
     }

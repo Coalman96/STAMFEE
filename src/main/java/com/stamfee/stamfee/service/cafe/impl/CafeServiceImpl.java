@@ -4,6 +4,8 @@ import com.stamfee.stamfee.dto.MemberDTO;
 import com.stamfee.stamfee.dto.cafe.*;
 import com.stamfee.stamfee.entity.Cafe;
 import com.stamfee.stamfee.entity.CafeMenu;
+import com.stamfee.stamfee.entity.Member;
+import com.stamfee.stamfee.mapper.MemberMapper;
 import com.stamfee.stamfee.service.cafe.CafeMenuRepository;
 import com.stamfee.stamfee.service.cafe.CafeRepository;
 import com.stamfee.stamfee.service.cafe.CafeService;
@@ -24,7 +26,7 @@ public class CafeServiceImpl implements CafeService {
     private final CafeRepository cafeRepository;
     private final CafeMenuRepository cafeMenuRepository;
     private final MemberService memberService;
-
+    private final MemberMapper memberMapper;
 
     //Todo: addCafe Member 정보 createCafe 추가, Dto변환 작업 필요 메뉴는 어떻게?
     @Override
@@ -35,17 +37,18 @@ public class CafeServiceImpl implements CafeService {
         MemberDTO memberDto = memberService.getMember(cellPhone);
 
         // memberDto -> Member Entity 로 전환 필요
+        Member member = memberMapper.memberDTOToMember(memberDto);
 
-//        //Cafe create 메서드
-//        Cafe.createClub(cafeSaveDto.getName(), cafeSaveDto.getContent(),
-//                cafeSaveDto.getTelNumber(), cafeSaveDto.getLongitude(), cafeSaveDto.getLatitude(),
-//                cafeSaveDto.getDong(), )
-
-
-        //cafeRepository.save()
+        //Cafe create 메서드
+        Cafe cafe = Cafe.createCafe(cafeSaveDto.getName(), cafeSaveDto.getContent(),
+                cafeSaveDto.getTelNumber(), cafeSaveDto.getLongitude(), cafeSaveDto.getLatitude(),
+                cafeSaveDto.getDong(), member);
 
 
-        return null;
+        cafeRepository.save(cafe);
+
+
+        return cafe.getId();
     }
 
     @Override
@@ -58,13 +61,27 @@ public class CafeServiceImpl implements CafeService {
     }
 
     @Override
-    public void updateCafe(CafeUpdateDto cafeUpdateDto) {
+    public boolean updateCafe(CafeUpdateDto cafeUpdateDto) {
+        try {
+            // 카페 정보 찾기
+            Cafe cafe = cafeRepository.findById(cafeUpdateDto.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("등록된 카페를 찾을 수 없습니다."));
 
-        //카페 정보 찾기
-        Cafe cafe = cafeRepository.findById(cafeUpdateDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("등록된 카페를 찾을 수 없습니다."));
+            // 카페 정보 업데이트
+            cafe.updateCafe(cafeUpdateDto);
 
-        cafe.updateCafe(cafeUpdateDto);
+            // 변경된 내용을 저장
+            cafeRepository.save(cafe);
+
+            // 성공적으로 업데이트되었으므로 true 반환
+            return true;
+        } catch (IllegalArgumentException e) {
+            // 등록된 카페를 찾을 수 없는 경우
+            e.printStackTrace(); // 또는 원하는 다른 처리를 수행
+
+            // 실패한 경우 false 반환
+            return false;
+        }
     }
 
 
@@ -136,15 +153,23 @@ public class CafeServiceImpl implements CafeService {
     }
 
     @Override
-    public void updateCafeMenu(CafeMenuUpdateDto cafeMenuUpdateDto) {
+    public boolean updateCafeMenu(CafeMenuUpdateDto cafeMenuUpdateDto) {
 
-        // CafeMenu 가져오기
-        CafeMenu cafeMenu = cafeMenuRepository.findById(cafeMenuUpdateDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다. "));
+        try {
+            // CafeMenu 가져오기
+            CafeMenu cafeMenu = cafeMenuRepository.findById(cafeMenuUpdateDto.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다."));
 
-        cafeMenu.updateCafeMenu(cafeMenuUpdateDto.getName(), cafeMenuUpdateDto.getContent(), cafeMenuUpdateDto.getPrice());
+            cafeMenu.updateCafeMenu(cafeMenuUpdateDto.getName(), cafeMenuUpdateDto.getContent(), cafeMenuUpdateDto.getPrice());
 
-
+            return true;
+        } catch (IllegalArgumentException e) {
+            // 메뉴를 찾을 수 없는 경우
+            return false;
+        } catch (Exception e) {
+            // 그 외 예외 처리
+            return false;
+        }
     }
 
 

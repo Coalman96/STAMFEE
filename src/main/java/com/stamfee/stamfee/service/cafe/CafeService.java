@@ -10,7 +10,7 @@ public interface CafeService {
 
     public CafeDto getCafe(Long cafeId);
 
-    public void updateCafe(CafeUpdateDto cafeUpdateDto);
+    public boolean updateCafe(CafeUpdateDto cafeUpdateDto);
 
     public void deleteCafe(Long memberId, Long cafeId);
 
@@ -20,6 +20,6 @@ public interface CafeService {
 
     public List<CafeMenuListDto> listCafeMenu(Long cafeId);
 
-    public void updateCafeMenu(CafeMenuUpdateDto cafeMenuUpdateDto);
+    public boolean updateCafeMenu(CafeMenuUpdateDto cafeMenuUpdateDto);
 
 }
