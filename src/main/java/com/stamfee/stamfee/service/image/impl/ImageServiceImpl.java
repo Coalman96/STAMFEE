@@ -55,8 +55,11 @@ public class ImageServiceImpl implements ImageService {
     int imageNum;
 
     @Override
-    public void addImage(List<MultipartFile> multipartFiles, ImageDTO imageDTO) {
+    public boolean addImage(List<MultipartFile> multipartFiles, ImageDTO imageDTO) {
         // forEach 구문을 통해 multipartFiles로 넘어온 파일들 하나씩 처리
+        try {
+
+
         multipartFiles.forEach(file -> {
             String fileName = createFileName(file.getOriginalFilename());
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -74,6 +77,11 @@ public class ImageServiceImpl implements ImageService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
         });
+        return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -91,9 +99,15 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deletePostImage(long postId) throws Exception {
+    public boolean deletePostImage(long postId) throws Exception {
         log.info(postId);
-        deleteEntityImages(Post.builder().postId(postId).build());
+        try {
+            deleteEntityImages(Post.builder().postId(postId).build());
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -159,6 +173,7 @@ public class ImageServiceImpl implements ImageService {
         // 엔터티에 해당하는 이미지들을 가져옴
         Pageable pageable = PageRequest.of(0, imageNum);
         Page<Image> imagePage;
+        log.info("받은 entity는{}",entity);
 
         if (entity instanceof Post) {
             imagePage = imageRepository.findByPost((Post) entity, pageable);
@@ -211,14 +226,14 @@ public class ImageServiceImpl implements ImageService {
 
     private String removeEndpointAndBucket(String fileName) {
         // endpoint와 bucket을 파일 경로에서 삭제
-        String cleanedFileName = fileName.replaceFirst(bucket + "/", "");
+        String cleanedFileName = fileName.replaceFirst(bucket, "");
 
         return cleanedFileName;
     }
 
     private String removeEndpointForProfile(String fileName) {
         // endpoint와 bucket을 파일 경로에서 삭제
-        String cleanedFileName = fileName.replaceFirst(bucket + "/", "");
+        String cleanedFileName = fileName.replaceFirst(bucket, "");
 
         return cleanedFileName;
     }

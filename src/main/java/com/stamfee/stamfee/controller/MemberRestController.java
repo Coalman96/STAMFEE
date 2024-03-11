@@ -68,11 +68,11 @@ public class MemberRestController {
     return "{\"success\": true}";
   }
 
-  @GetMapping("/getMember/{cellphone}")
-  public ResponseEntity<MemberDTO> getMember(@PathVariable String cellphone) throws Exception{
-    log.info("/member/getMember/{} : GET : ",cellphone);
+  @PostMapping("/getMember")
+  public ResponseEntity<MemberDTO> getMember(@RequestBody MemberDTO memberDTO) throws Exception{
+    log.info("/stamfee/member/getMember : POST {}",memberDTO);
 
-    MemberDTO existMember = memberService.getMember(cellphone);
+    MemberDTO existMember = memberService.getMember(memberDTO.getCellphone());
 
     if(existMember !=null)
       return ResponseEntity.ok(existMember);
