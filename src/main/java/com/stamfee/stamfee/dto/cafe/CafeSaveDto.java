@@ -12,4 +12,5 @@ public class CafeSaveDto {
     private Double latitude;
     private Double longitude;
 
+
 }

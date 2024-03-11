@@ -1,8 +1,8 @@
 package com.stamfee.stamfee.service.cafe;
 
-import com.stamfee.stamfee.dto.cafe.CafeDto;
-import com.stamfee.stamfee.dto.cafe.CafeSaveDto;
-import com.stamfee.stamfee.dto.cafe.CafeUpdateDto;
+import com.stamfee.stamfee.dto.cafe.*;
+
+import java.util.List;
 
 public interface CafeService {
 
@@ -10,8 +10,16 @@ public interface CafeService {
 
     public CafeDto getCafe(Long cafeId);
 
-    public void updateCafe(CafeUpdateDto cafeUpdateDto);
+    public boolean updateCafe(CafeUpdateDto cafeUpdateDto);
 
     public void deleteCafe(Long memberId, Long cafeId);
+
+    public Long addCafeMenu(String cellPhone, CafeMenuSaveDto cafeMenuSaveDto);
+
+    public CafeMenuDto getCafeMenu(Long cafeMenuId);
+
+    public List<CafeMenuListDto> listCafeMenu(Long cafeId);
+
+    public boolean updateCafeMenu(CafeMenuUpdateDto cafeMenuUpdateDto);
 
 }
