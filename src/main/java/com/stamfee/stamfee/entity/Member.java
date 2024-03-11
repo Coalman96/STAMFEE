@@ -3,7 +3,9 @@ package com.stamfee.stamfee.entity;
 import com.stamfee.stamfee.common.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +48,14 @@ public class Member implements UserDetails {
 
   @Column(name = "role",columnDefinition = "BIGINT DEFAULT 0 CHECK (role BETWEEN 0 AND 1)")
   private Role role;
+
+  //게시물
+  @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+  private List<Post> posts;
+
+  //댓글
+  @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+  private List<Comment> comments;
 
 
   //JWT UserDetails OverRiding
