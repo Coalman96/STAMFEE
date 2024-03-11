@@ -40,9 +40,6 @@ public class Member implements UserDetails {
   @Column(name = "nickname", length = 40, nullable = false)
   private String nickname;
 
-  @Column(name = "dong_ne", columnDefinition = "VARCHAR(255) DEFAULT '강서구'")
-  private String dongNe;
-
   @Column(name = "picture",columnDefinition = "VARCHAR(255) DEFAULT 'empty.jpg'")
   private String picture;
 

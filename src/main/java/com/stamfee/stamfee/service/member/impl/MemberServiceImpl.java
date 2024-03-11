@@ -47,7 +47,6 @@ public class MemberServiceImpl implements MemberService {
       MemberDTO memberDTO = MemberDTO.builder()
           .picture(member.getPicture())
           .nickname(member.getNickname())
-          .dongNe(member.getDongNe())
           .build();
 
       log.info("반환하는 회원은{}", memberDTO);

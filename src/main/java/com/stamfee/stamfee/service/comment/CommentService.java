@@ -13,7 +13,7 @@ public interface CommentService {
 
     List<CommentDTO> getCommentList(long postId) throws Exception;
 
-    void updateComment(CommentDTO commentDTO) throws Exception;
+    boolean updateComment(CommentDTO commentDTO) throws Exception;
 
-    void deleteComment(long commentId) throws Exception;
+    boolean deleteComment(long commentId) throws Exception;
 }
