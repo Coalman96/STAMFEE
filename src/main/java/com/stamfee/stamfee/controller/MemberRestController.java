@@ -91,9 +91,8 @@ public class MemberRestController {
   }
 
   @PostMapping("/getMemberList")
-  public ResponseEntity<List<MemberDTO>> getMemberList(@RequestBody Map<String, Object> requestData) throws Exception {
-    log.info("/member/getMemberList : POST : {}",requestData);
-    SearchDTO searchDTO = objectMapper.convertValue(requestData.get("searchDTO"), SearchDTO.class);
+  public ResponseEntity<List<MemberDTO>> getMemberList(@RequestBody SearchDTO searchDTO) throws Exception {
+    log.info("/member/getMemberList : POST : {}",searchDTO);
     searchDTO.setPageSize(1000);
     log.info("멤버리스트는{}",memberService.getMemberList(searchDTO));
 
@@ -110,21 +109,14 @@ public class MemberRestController {
 
   }
 
-  @GetMapping("/checkNickname/{nickname}")
-  public ResponseEntity<String> checkNickname(@PathVariable String nickname) throws Exception{
-    log.info("/member/checkNickname/{} : GET : ",nickname);
 
-    boolean result = memberService.checkNickname(nickname);
-
-    return result ? ResponseEntity.ok("{\"success\": true}") : ResponseEntity.badRequest().body("{\"success\": false}");
-
-  }
 
   @PostMapping("/updateProfile")
   public ResponseEntity<MemberDTO> updateProfile(@ModelAttribute MemberDTO memberDTO,@RequestParam("image") MultipartFile image) throws Exception {
     log.info("/member/updateProfile : POST : {}", memberDTO);
-    String fileName = memberDTO.getPicture();
-    imageService.deleteProfile(fileName);
+    log.info("받은 이미지는: {}",image);
+    if(memberDTO.getPicture() != null)
+      imageService.deleteProfile(memberDTO.getPicture());
 
     // 이미지 업로드 및 저장
     imageService.addProfile(image, memberDTO);
