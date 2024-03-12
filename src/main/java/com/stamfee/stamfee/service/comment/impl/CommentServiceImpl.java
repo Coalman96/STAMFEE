@@ -35,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     //댓글 작성
     @Override
     public boolean addComment(CommentDTO commentDTO) throws Exception {
+        log.info("받은 commentDTO는 : {}",commentDTO);
         Comment comment = commentMapper.commentDTOToComment(commentDTO);
         log.info(comment);
         try{

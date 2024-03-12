@@ -10,4 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+  Page<Post> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
+
 }

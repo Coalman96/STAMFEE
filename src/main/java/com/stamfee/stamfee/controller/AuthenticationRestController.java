@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -113,6 +115,16 @@ public class AuthenticationRestController {
     log.info("/member/verifySms : POST : {}", authDTO);
     return authService.verifySms(authDTO) ? new ResponseEntity<>("{\"success\": true}", HttpStatus.OK) :
         new ResponseEntity<>("{\"success\": false}",HttpStatus.BAD_REQUEST);
+
+  }
+
+  @GetMapping("/checkNickname/{nickname}")
+  public ResponseEntity<String> checkNickname(@PathVariable String nickname) throws Exception{
+    log.info("/member/checkNickname/{} : GET : ",nickname);
+
+    boolean result = memberService.checkNickname(nickname);
+
+    return result ? ResponseEntity.badRequest().body("{\"success\": false}") : ResponseEntity.ok("{\"success\": true}");
 
   }
 

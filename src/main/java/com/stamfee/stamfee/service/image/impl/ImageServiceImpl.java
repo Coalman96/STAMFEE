@@ -132,8 +132,9 @@ public class ImageServiceImpl implements ImageService {
                 // 프로필 이미지 URL 설정
                 if (dto instanceof MemberDTO) {
                     MemberDTO memberDTO = (MemberDTO) dto;
-                    memberDTO.setPicture(bucket+"/"+fileName);
-                    memberRepository.save(memberMapper.memberDTOToMember(memberDTO));
+                    MemberDTO existMember = memberService.getMember(memberDTO.getCellphone());
+                    existMember.setPicture(bucket+"/"+fileName);
+                    memberRepository.save(memberMapper.memberDTOToMember(existMember));
                 }
 
             } catch (IOException e) {

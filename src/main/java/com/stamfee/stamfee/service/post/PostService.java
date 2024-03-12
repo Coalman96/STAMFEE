@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface PostService {
-    PostDTO addPost(PostDTO postDTO) throws Exception;
+    Long addPost(PostDTO postDTO) throws Exception;
 
     PostDTO getPost(long postId) throws Exception;
 
