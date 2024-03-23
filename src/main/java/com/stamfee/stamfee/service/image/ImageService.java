@@ -8,13 +8,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
 
-    void addImage(List<MultipartFile> multipartFiles, ImageDTO imageDTO) throws Exception;
+    boolean addImage(List<MultipartFile> multipartFiles, ImageDTO imageDTO) throws Exception;
 
     ImageDTO getImage(long imageId) throws Exception;
 
     List<ImageDTO> getImageList(long id, SearchDTO searchDTO) throws Exception;
 
-    void deletePostImage(long postId) throws Exception;
+    boolean deletePostImage(long postId) throws Exception;
 
     void  deleteImageByFileName(String fileName) throws Exception;
 

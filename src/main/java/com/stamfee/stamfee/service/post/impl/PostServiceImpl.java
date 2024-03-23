@@ -31,9 +31,10 @@ public class PostServiceImpl implements PostService {
 
     //게시물 작성
     @Override
-    public PostDTO addPost(PostDTO postDTO) throws Exception {
+    public Long addPost(PostDTO postDTO) throws Exception {
         log.info("받은 PostDTO는{}",postDTO);
-        return postMapper.postToPostDTO(postRepository.save(postMapper.postDTOToPost(postDTO)));
+        Post post = postRepository.save(postMapper.postDTOToPost(postDTO));
+        return post.getPostId();
     }
 
     //게시물 조회
@@ -48,7 +49,7 @@ public class PostServiceImpl implements PostService {
         Sort sort = Sort.by(Sort.Direction.DESC, "regDate");
         Pageable pageable = PageRequest.of(searchDTO.getCurrentPage(), searchDTO.getPageSize(), sort);
         Page<Post> postPage;
-        postPage = postRepository.findAll(pageable);
+        postPage = postRepository.findByTitleContainingIgnoreCase(searchDTO.getSearchKeyword(),pageable);
         log.info(postPage);
         return postPage.map(postMapper::postToPostDTO).toList();
     }

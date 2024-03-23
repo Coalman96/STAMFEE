@@ -35,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     //댓글 작성
     @Override
     public boolean addComment(CommentDTO commentDTO) throws Exception {
+        log.info("받은 commentDTO는 : {}",commentDTO);
         Comment comment = commentMapper.commentDTOToComment(commentDTO);
         log.info(comment);
         try{
@@ -64,17 +65,29 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 수정
     @Override
-    public void updateComment(CommentDTO commentDTO) throws Exception {
+    public boolean updateComment(CommentDTO commentDTO) throws Exception {
         Comment comment = commentMapper.commentDTOToComment(commentDTO);
         log.info(comment);
-        commentRepository.save(comment);
+        try{
+            commentRepository.save(comment);
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
     //댓글 삭제
     @Override
-    public void deleteComment(long commentId) throws Exception {
+    public boolean deleteComment(long commentId) throws Exception {
         log.info(commentId);
-        commentRepository.deleteById(commentId);
+        try{
+            commentRepository.deleteById(commentId);
+            return true;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
 }

@@ -19,8 +19,6 @@ public class MemberDTO {
   private String password;
   //닉네임
   private String nickname;
-  //동네
-  private String dongNe;
   //프로필사진
   private String picture;
   //활성화여부

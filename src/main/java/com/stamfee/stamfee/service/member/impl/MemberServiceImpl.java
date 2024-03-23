@@ -47,7 +47,6 @@ public class MemberServiceImpl implements MemberService {
       MemberDTO memberDTO = MemberDTO.builder()
           .picture(member.getPicture())
           .nickname(member.getNickname())
-          .dongNe(member.getDongNe())
           .build();
 
       log.info("반환하는 회원은{}", memberDTO);
@@ -62,8 +61,7 @@ public class MemberServiceImpl implements MemberService {
   public List<MemberDTO> getMemberList(SearchDTO searchDTO) throws Exception {
     log.info("SearchDTO는 {} ", searchDTO);
     Pageable pageable = PageRequest.of(searchDTO.getCurrentPage(), searchDTO.getPageSize());
-    Page<Member> memberPage;
-    memberPage = memberRepository.findAll(pageable);
+    Page<Member> memberPage = memberRepository.findAll(pageable);
     log.info(memberPage);
     return memberPage.map(memberMapper::memberToMemberDTO).toList();
   }
@@ -72,9 +70,10 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public boolean updateNickname(MemberDTO memberDTO) throws Exception {
     log.info("받은 member는{}",memberDTO);
-
+    MemberDTO existMemberDTO = getMember(memberDTO.getCellphone());
+    existMemberDTO.setNickname(memberDTO.getNickname());
     if(!checkNickname(memberDTO.getNickname())){
-      memberRepository.save(memberMapper.memberDTOToMember(memberDTO));
+      memberRepository.save(memberMapper.memberDTOToMember(existMemberDTO));
       return true;
     }else
       return false;

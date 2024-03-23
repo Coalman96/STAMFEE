@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(value = {AuditingEntityListener.class})
 @Getter
 @Setter
-abstract class Base {
+public class Base {
     @LastModifiedDate
     @Column(updatable = true)
     private LocalDateTime regDate;

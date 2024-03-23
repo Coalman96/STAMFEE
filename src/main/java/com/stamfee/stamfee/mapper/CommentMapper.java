@@ -50,7 +50,7 @@ public interface CommentMapper {
         if(memberDTO == null){
             return null;
         }
-        return Member.builder().nickname(memberDTO.getNickname()).build();
+        return Member.builder().cellphone(memberDTO.getCellphone()).nickname(memberDTO.getNickname()).build();
     }
 
     @Named("memberToMemberDTO")
@@ -58,7 +58,7 @@ public interface CommentMapper {
         if(member == null){
             return null;
         }
-        return MemberDTO.builder().nickname(member.getNickname())
+        return MemberDTO.builder().cellphone(member.getCellphone()).nickname(member.getNickname())
                 .build();
     }
 
