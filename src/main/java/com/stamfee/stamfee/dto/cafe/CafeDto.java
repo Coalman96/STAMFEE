@@ -19,6 +19,7 @@ public class CafeDto {
     private Double longitude;
     private Double latitude;
     private String dong;
+    private boolean stampFlag;
 //
 //    public Cafe toEntity(CafeDto cafeDto){
 //        return Cafe.builder()
@@ -34,6 +35,17 @@ public class CafeDto {
                 .longitude(cafe.getLongitude())
                 .latitude(cafe.getLatitude())
                 .dong(cafe.getDong())
+                .build();
+    }
+
+    public Cafe toEntity(){
+        return Cafe.builder()
+                .id(this.id)
+                .name(this.name)
+                .content(this.content)
+                .telNumber(this.telNumber)
+                .dong(this.dong)
+                .stampFlag(this.stampFlag)
                 .build();
     }
 
