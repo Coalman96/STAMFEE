@@ -19,6 +19,7 @@ public class Cafe {
     private Long id;
 
     private String name;
+
     private String content;
 
     @Column(name = "tel_number")
@@ -40,14 +41,15 @@ public class Cafe {
 
     // 생성자 메서드
     @Builder
-    public Cafe(CafeDto cafeDto){
-        this.id = cafeDto.getId();
-        this.name = cafeDto.getName();
-        this.content = cafeDto.getContent();
-        this.telNumber = cafeDto.getTelNumber();
-        this.longitude = cafeDto.getLongitude();
-        this.latitude = cafeDto.getLatitude();
-        this.dong = cafeDto.getDong();
+    public Cafe(Long id, String name, String content, String telNumber, Double longitude, Double latitude, String dong, boolean stampFlag){
+        this.id = id;
+        this.name = name;
+        this.content = content;
+        this.telNumber = telNumber;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.dong = dong;
+        this.stampFlag = stampFlag;
 
     }
 

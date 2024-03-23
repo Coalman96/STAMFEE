@@ -1,6 +1,7 @@
 package com.stamfee.stamfee.service.auth.impl;
 
 import com.stamfee.stamfee.dto.AuthDTO;
+import com.stamfee.stamfee.dto.MemberDTO;
 import com.stamfee.stamfee.service.auth.AuthRepository;
 import com.stamfee.stamfee.service.auth.AuthService;
 import com.stamfee.stamfee.service.member.MemberRepository;
@@ -14,6 +15,8 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -120,5 +123,17 @@ public class AuthServiceImpl implements AuthService {
 
     return true;
   }
+
+  @Override
+  public MemberDTO getAuthMember() throws Exception {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication != null && authentication.getPrincipal() instanceof MemberDTO) {
+      MemberDTO memberDTO = (MemberDTO) authentication.getPrincipal();
+      return memberDTO;
+    } else {
+      throw new Exception("인증 정보가 없습니다.");
+
+    }  }
 
 }
